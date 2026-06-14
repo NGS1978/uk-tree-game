@@ -1,0 +1,225 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<meta name="color-scheme" content="only light">
+<title>Owl preview — Jan's Tree Game</title>
+<style>
+  :root{color-scheme:only light}
+  body{margin:0;background:#FBF6E2;color:#5a4a2a;font-family:Georgia,'Times New Roman',serif;text-align:center;padding:18px 14px 60px}
+  h1{font-size:21px;font-weight:600;margin:6px 0 2px}
+  h2{font-size:15px;font-weight:600;margin:34px 0 10px;color:#7a5a2e}
+  p.note{font-size:13px;color:#8a7a55;max-width:340px;margin:4px auto 8px;line-height:1.5}
+  .row{display:flex;gap:30px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .wag-band{background:#241a12;border-radius:18px;padding:22px 14px 26px;margin:18px auto 0;max-width:380px}
+  .wag-band h2{color:#e8c24a}
+  /* ---- owl ---- */
+  .share-wrap{--so-body:#9a5a30;--so-wing:#7c451f;--so-face:#ecd29a;--so-beak:#b8893f;position:relative;display:inline-block}
+  .share-wrap.wag{--so-body:#E8C24A;--so-wing:#8A6A1E;--so-face:#FFF3D6;--so-beak:#C8881F}
+  .so-body{fill:var(--so-body)}.so-wing{fill:var(--so-wing)}.so-face{fill:var(--so-face)}.so-beak{fill:var(--so-beak)}.so-streak{stroke:var(--so-streak,var(--so-wing))}
+  .so-seal{color-scheme:light;position:relative;overflow:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 38% 32%,#8FC0E8,#3D72A8 60%,#285685);box-shadow:0 5px 16px rgba(20,50,90,.45), inset 0 2px 6px rgba(255,255,255,.55), inset 0 -9px 16px rgba(15,45,85,.4)}
+  .wag .so-seal{background:radial-gradient(circle at 38% 32%,#7d5c26,#4f3a16 62%,#2c2010);box-shadow:0 5px 16px rgba(0,0,0,.5), inset 0 2px 6px rgba(255,226,150,.4), inset 0 -9px 16px rgba(0,0,0,.45)}
+  .so-seal::after{content:'';position:absolute;border-radius:50%;border:2px dashed rgba(232,244,255,.6);z-index:4;pointer-events:none}
+  .wag .so-seal::after{border-color:rgba(255,222,140,.55)}
+  .big{width:200px;height:200px}.big::after{inset:13px}
+  .big .so-owl{height:178px;width:auto}
+  .badge{width:52px;height:52px}.badge::after{inset:3px;border-width:1px}
+  .badge .so-owl{height:50px;width:auto}
+  .badge .so-streak,.badge .so-tuft{display:none}
+  .badge .so-wingR g[stroke],.badge .so-wingL g[stroke],.badge .so-wingR path[stroke],.badge .so-wingL path[stroke]{display:none}
+  .badge .so-rim{stroke-width:1.6;opacity:.62}
+  .badge{--so-beak:#a06a28}
+  .so-owl{display:block;transform-origin:50% 80%}
+  .so-sheen{position:absolute;top:0;bottom:0;left:0;width:62%;pointer-events:none;z-index:3;background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);animation:soSheen 7s ease-in-out infinite}
+  @keyframes soSheen{0%,68%{transform:translateX(-160%) skewX(-18deg)}100%{transform:translateX(320%) skewX(-18deg)}}
+  /* share button mock */
+  .share-btn{display:inline-flex;align-items:center;gap:12px;border:none;cursor:default;
+    font-family:Georgia,serif;font-size:16px;color:#fff;background:linear-gradient(#5a8f4e,#447a3a);
+    padding:8px 10px 8px 22px;border-radius:34px;box-shadow:0 4px 12px rgba(40,80,40,.35)}
+  .wag .share-btn{background:linear-gradient(#8a6a1e,#5f4715)}
+  /* animations */
+  .so-owl{transform-origin:50% 86%;animation:soBob 3.7s ease-in-out infinite}
+  @keyframes soBob{0%,100%{transform:translateY(0) scaleY(1) rotate(0deg)}50%{transform:translateY(-2.4px) scaleY(1.03) rotate(-1deg)}}
+  .so-head{transform-box:fill-box;transform-origin:50% 74%;animation:soHeadTurn 12s ease-in-out infinite}
+  @keyframes soHeadTurn{0%,46%{transform:translateX(0) scaleX(1) skewY(0deg) rotate(0deg)}53%{transform:translateX(-1px) scaleX(.97) rotate(-2deg)}61%,70%{transform:translateX(-3.4px) scaleX(.9) skewY(-2deg) rotate(-6deg)}78%{transform:translateX(.5px) scaleX(1) rotate(1deg)}84%,100%{transform:translateX(0) scaleX(1) skewY(0deg) rotate(0deg)}}
+  .so-eyes,.so-lidgaze{transform-box:fill-box;transform-origin:50% 50%;animation:soGaze 12s ease-in-out infinite}
+  @keyframes soGaze{0%,46%{transform:translateX(0)}53%{transform:translateX(-1.6px)}61%,70%{transform:translateX(-3.1px)}78%{transform:translateX(.4px)}84%,100%{transform:translateX(0)}}
+  .so-glint{transform-box:fill-box;transform-origin:50% 50%;animation:soGlint 12s ease-in-out infinite}
+  @keyframes soGlint{0%,46%{transform:translateX(0)}53%{transform:translateX(-.5px)}61%,70%{transform:translateX(-1px)}78%{transform:translateX(.1px)}84%,100%{transform:translateX(0)}}
+  .so-crown{transform-box:fill-box;transform-origin:50% 100%;animation:soCowlick 3.9s ease-in-out infinite}
+  @keyframes soCowlick{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-9deg) translateX(-.4px)}}
+  .so-tilt{transform-box:fill-box;transform-origin:50% 90%;animation:soTilt 9s ease-in-out infinite}
+  @keyframes soTilt{0%,36%{transform:rotate(0deg)}45%,74%{transform:rotate(-5.5deg)}84%,100%{transform:rotate(0deg)}}
+  .so-brow{transform-box:fill-box;transform-origin:50% 100%;animation:soBrowFlick 9s ease-in-out infinite}
+  @keyframes soBrowFlick{0%,40%{transform:translateY(0)}47%,66%{transform:translateY(-.7px)}74%,100%{transform:translateY(0)}}
+  .so-seal .so-wingR{transform-box:fill-box;transform-origin:97% 2%;animation:soWave 7s ease-in-out infinite}
+  @keyframes soWave{0%,5%{transform:rotate(0deg) scale(1)}9%{transform:rotate(-4deg) scale(1)}14%{transform:rotate(30deg) scale(1.05,1.1)}19%{transform:rotate(21deg) scale(1.03,1.06)}25%{transform:rotate(32deg) scale(1.06,1.12)}30%{transform:rotate(23deg) scale(1.03,1.06)}34%{transform:rotate(29deg) scale(1.05,1.1)}37%{transform:rotate(7deg) scale(1)}41%,100%{transform:rotate(0deg) scale(1)}}
+  .so-wingL{transform-box:fill-box;transform-origin:3% 2%;animation:soFlutterL 4.3s ease-in-out infinite}
+  @keyframes soFlutterL{0%,100%{transform:rotate(0deg)}50%{transform:rotate(2deg)}}
+  .so-lid{transform-box:fill-box;transform-origin:center top;transform:scaleY(0)}
+  .so-lid.both{animation:soBlink 10s ease-in-out infinite}
+  .so-lid.left{animation:soWink 13s ease-in-out infinite}
+  @keyframes soBlink{0%,12%{transform:scaleY(0)}14%{transform:scaleY(1)}19%{transform:scaleY(0)}100%{transform:scaleY(0)}}
+  @keyframes soWink{0%,30%{transform:scaleY(0)}33%{transform:scaleY(1)}40%{transform:scaleY(1)}44%{transform:scaleY(0)}100%{transform:scaleY(0)}}
+  /* ---- flight demo ---- */
+  .fly-stage{position:relative;height:300px;max-width:360px;margin:6px auto 0;display:flex;flex-direction:column-reverse;align-items:center;overflow:hidden;border-radius:16px;background:rgba(122,90,46,.07)}
+  .fly-stage .share-btn{margin-bottom:20px;cursor:pointer}
+  .so-flight{--so-body:#9a5a30;--so-wing:#7c451f;--so-face:#ecd29a;--so-beak:#b8893f;position:absolute;left:50%;bottom:46px;width:64px;height:70px;margin-left:-32px;pointer-events:none;z-index:5}
+  .so-flyer-svg{width:64px;height:70px;display:block;opacity:1;transform-origin:50% 50%}
+  .fly-stage.flying .so-flyer-svg{animation:soFlyDemo 2.6s ease-in forwards}
+  @keyframes soFlyDemo{0%{opacity:1;transform:translate(0,0) scale(1)}7%{transform:translate(0,-6px) scale(1.06)}20%{transform:translate(-8px,-24px) scale(1.02) rotate(-3deg)}48%{transform:translate(-34px,-86px) scale(1.2) rotate(-6deg)}76%{opacity:1;transform:translate(-74px,-164px) scale(1.46) rotate(-8deg)}100%{opacity:0;transform:translate(-106px,-236px) scale(1.62) rotate(-9deg)}}
+  .so-flyer-svg .so-wingR{transform-box:fill-box;transform-origin:92% 30%}
+  .so-flyer-svg .so-wingL{transform-box:fill-box;transform-origin:8% 30%}
+  .so-flyer-svg .so-bodyhead{transform-box:fill-box;transform-origin:50% 60%}
+  .fly-stage.flying .so-flyer-svg .so-wingR{animation:soFlapR 0.72s cubic-bezier(.34,0,.45,1) infinite}
+  .fly-stage.flying .so-flyer-svg .so-wingL{animation:soFlapL 0.72s cubic-bezier(.34,0,.45,1) infinite}
+  .fly-stage.flying .so-flyer-svg .so-bodyhead{animation:soLift 0.72s cubic-bezier(.34,0,.45,1) infinite}
+  @keyframes soFlapR{0%{transform:rotate(-34deg)}40%{transform:rotate(32deg)}80%,100%{transform:rotate(-34deg)}}
+  @keyframes soFlapL{0%{transform:rotate(34deg)}40%{transform:rotate(-32deg)}80%,100%{transform:rotate(34deg)}}
+  @keyframes soLift{0%{transform:translateY(1px)}48%{transform:translateY(-2.2px)}86%,100%{transform:translateY(1px)}}
+  .so-spark{position:absolute;left:50%;bottom:36px;width:7px;height:7px;margin-left:-3px;border-radius:65% 0 65% 0;opacity:0;z-index:4}
+  .so-spark.s1{background:#2E7D32}.so-spark.s2{background:#C99A2E}.so-spark.s3{background:#8bbf6b}
+  .fly-stage.flying .so-spark{animation:soRise 1.15s ease-out forwards}
+  .fly-stage.flying .so-spark.s2{animation-delay:.12s}
+  .fly-stage.flying .so-spark.s3{animation-delay:.24s}
+  @keyframes soRise{0%{opacity:0;transform:translate(0,0) scale(.4)}25%{opacity:.9}100%{opacity:0;transform:translate(-72px,-94px) scale(1) rotate(160deg)}}
+  /* preview page: animations always play so the motion is visible on any device, even with Reduce Motion on */
+</style></head><body>
+  <h1>Let's Identify Trees! — the Share owl</h1>
+  <p class="note">A cute tawny owlet who waves goodbye from the Share button. Give it a few seconds — it breathes, blinks, winks, waves its wing, and turns its head to peek.</p>
+  <div class="row"><span class="share-wrap"><span class="so-seal big"><span class="so-sheen"></span></span></span></div>
+
+  <h2>Tap Share and off it flies (auto-replays)</h2>
+  <p class="note">The owlet lifts off carrying a wax-sealed letter — same flight your game already uses, now with the new owl. Tap the button, or just watch it loop.</p>
+  <div class="fly-stage" id="flyStage">
+    <button class="share-btn" id="flyBtn">Send me to a friend</button>
+    <span class="so-flight">
+      <span class="so-spark s1"></span><span class="so-spark s2"></span><span class="so-spark s3"></span>
+      <svg class="so-flyer-svg" viewBox="0 0 64 70" aria-hidden="true">
+        <g class="so-wingR">
+          <path class="so-wing" d="M19 30 C9 24.5 -4 24 -13 29.5 C-10 30.8 -12 33.6 -9 35 C-6.4 33.6 -8.2 36.6 -5 37.2 C-2.6 35.8 -3.8 39 -0.6 38.4 C5 36.4 12 33.4 19 30 Z"/>
+          <path d="M15.5 30.8 C7 30.8 -1.5 32.6 -10 34.6" stroke="#b87340" stroke-width=".8" fill="none" opacity=".5"/>
+          <path d="M14 33 C6 33.4 -1 35 -7 37.4" stroke="#5e3415" stroke-width=".45" fill="none" opacity=".4"/>
+        </g>
+        <g class="so-wingL">
+          <path class="so-wing" d="M45 30 C55 24.5 68 24 77 29.5 C74 30.8 76 33.6 73 35 C70.4 33.6 72.2 36.6 69 37.2 C66.6 35.8 67.8 39 64.6 38.4 C59 36.4 52 33.4 45 30 Z"/>
+          <path d="M48.5 30.8 C57 30.8 65.5 32.6 74 34.6" stroke="#b87340" stroke-width=".8" fill="none" opacity=".5"/>
+          <path d="M50 33 C58 33.4 65 35 71 37.4" stroke="#5e3415" stroke-width=".45" fill="none" opacity=".4"/>
+        </g>
+        <g class="so-bodyhead">
+          <path class="so-body" d="M32 13 C45 13 51 23 51 35 C51 48 43 56 32 56 C21 56 13 48 13 35 C13 23 19 13 32 13 Z"/>
+          <path d="M32 13 C24 13 18.5 18 15.5 26 C20.5 21 26 20 32 20 C38 20 43.5 21 48.5 26 C45.5 18 40 13 32 13 Z" fill="#b87340" opacity=".5"/>
+          <path d="M30.9 16 C30.1 12.9 30.5 10.1 33 9.1 C35 8.6 35.8 10.5 34.4 11.8 C33.4 11.3 32.5 12 32.1 13.4 C31.8 12.2 31.4 11.7 30.9 16 Z" fill="#b87340"/>
+          <path class="so-face" d="M32 19 C23.5 17.6 17 22.8 17 31 C17 39 23.5 44 32 45.4 C40.5 44 47 39 47 31 C47 22.8 40.5 17.6 32 19 Z"/>
+          <path d="M32 19 C23.5 17.6 17 22.8 17 31 C17 39 23.5 44 32 45.4 C40.5 44 47 39 47 31 C47 22.8 40.5 17.6 32 19 Z" fill="none" stroke="#8a5226" stroke-width="1" opacity=".45"/>
+          <path d="M18.8 26 Q24.8 22.8 30.6 25.2" stroke="#9a6228" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".62"/>
+          <path d="M45.8 24.6 Q39.2 21.2 33.4 24.4" stroke="#9a6228" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".66"/>
+          <ellipse cx="24.8" cy="31" rx="6.1" ry="5.8" fill="#3a2812"/><ellipse cx="24.8" cy="31.2" rx="5.1" ry="4.8" fill="#15100a"/>
+          <ellipse cx="39.2" cy="31" rx="5.9" ry="5.6" fill="#3a2812"/><ellipse cx="39.2" cy="31.2" rx="4.9" ry="4.6" fill="#15100a"/>
+          <circle cx="23.9" cy="29" r="2" fill="#fff" opacity=".95"/><circle cx="38.3" cy="29" r="1.9" fill="#fff" opacity=".95"/>
+          <path class="so-beak" d="M32 34 C30.4 34 29.2 35 29.4 36.6 C29.6 38.3 31 39.8 32 39.8 C33 39.8 34.4 38.3 34.6 36.6 C34.8 35 33.6 34 32 34 Z"/>
+          <path d="M32 34.2 C30.8 34.4 30.2 35.3 30.3 36.5 L33.7 36.5 C33.8 35.3 33.2 34.4 32 34.2 Z" fill="#fff" opacity=".2"/>
+          <path d="M29.3 39.8 Q31.6 41.8 33.9 40.7 Q35 40.1 35.4 39" stroke="#7a531f" stroke-width=".85" fill="none" stroke-linecap="round" opacity=".5"/>
+          <ellipse cx="21.8" cy="37.4" rx="2.7" ry="1.8" fill="#ed9684" opacity=".5"/><ellipse cx="42.2" cy="37.4" rx="2.7" ry="1.8" fill="#ed9684" opacity=".5"/>
+          <g transform="rotate(-9 32 60)"><rect x="23.5" y="53" width="17" height="11.5" rx="1.4" fill="#fffdf3" stroke="#7a5a20" stroke-width="1"/><path d="M24 53.6 L32 59.4 L40 53.6" fill="none" stroke="#7a5a20" stroke-width="1"/><circle cx="32" cy="58.8" r="1.9" fill="#C0392B"/></g>
+          <g fill="#d8a85c"><ellipse cx="28.5" cy="53.5" rx="1.4" ry="1.9"/><ellipse cx="35.5" cy="53.5" rx="1.4" ry="1.9"/></g>
+        </g>
+      </svg>
+    </span>
+  </div>
+
+  <h2>On the Share button (real size)</h2>
+  <div class="row"><span class="share-wrap"><button class="share-btn">Send me to a friend<span class="so-seal badge"><span class="so-sheen"></span></span></button></span></div>
+
+  <h2>Just the badge, actual ~52px</h2>
+  <div class="row"><span class="share-wrap"><span class="so-seal badge"><span class="so-sheen"></span></span></span></div>
+
+  <div class="wag-band">
+    <h2>Wagner mode (gold)</h2>
+    <div class="row"><span class="share-wrap wag"><span class="so-seal big"><span class="so-sheen"></span></span></span></div>
+    <div class="row" style="margin-top:14px"><span class="share-wrap wag"><button class="share-btn">Send me to a friend<span class="so-seal badge"><span class="so-sheen"></span></span></button></span></div>
+  </div>
+
+  <template id="owltpl">
+<svg class="so-owl" viewBox="0 0 64 70" aria-hidden="true">
+  <ellipse cx="32" cy="64.8" rx="12" ry="2.6" fill="#3a230f" opacity=".1"/>
+  <g class="so-feet" fill="#d8a85c">
+    <ellipse cx="25.6" cy="61.4" rx="1.7" ry="2.4"/><ellipse cx="28.3" cy="61.9" rx="1.7" ry="2.5"/><ellipse cx="30.5" cy="61.5" rx="1.5" ry="2.1"/>
+    <ellipse cx="33.5" cy="61.5" rx="1.5" ry="2.1"/><ellipse cx="35.7" cy="61.9" rx="1.7" ry="2.5"/><ellipse cx="38.4" cy="61.4" rx="1.7" ry="2.4"/>
+  </g>
+  <path class="so-body" d="M32 5.5 C47 5.5 55 17 55.5 30 C56 38.5 53 47 48.5 54 C44.5 60.5 39 64 32 64 C25 64 19.5 60.5 15.5 54 C11 47 8 38.5 8.5 30 C9 17 17 5.5 32 5.5 Z"/>
+  <path d="M32 6 C22 6 15 13 12.5 24 C18.5 18 26 16 32 16 C38 16 45.5 18 51.5 24 C49 13 42 6 32 6 Z" fill="#b87340" opacity=".5"/>
+  <path d="M32 64 C42 64 49 56 51.5 45 C46.5 54 40 57.5 32 57.5 C24 57.5 17.5 54 12.5 45 C15 56 22 64 32 64 Z" fill="#6f3e1c" opacity=".3"/>
+  <ellipse cx="32" cy="50" rx="12.5" ry="11" fill="#c98a52" opacity=".45"/>
+  <g class="so-streak" stroke-width="1.3" stroke-linecap="round" opacity=".4" fill="none">
+    <path d="M24 49 q.6 4 -.2 8"/><path d="M32 50 q.5 4.5 0 9"/><path d="M40 49 q-.6 4 .2 8"/>
+    <path d="M19 46 q.4 3 -.4 6"/><path d="M45 46 q-.4 3 .4 6"/>
+  </g>
+  <g class="so-wingL">
+    <path class="so-wing" d="M46 33 C53 33 59 37 61 45 C61.6 48 60 49.5 57.4 48 C58.4 50.6 56.4 52 54 50.6 C54.6 53 52.4 54 50.4 52 C49 46 47.6 40 45 36.8 C44.5 35.2 45 33.8 46 33 Z"/>
+    <path d="M46.4 35 C51.5 35.5 56 39 58 46 C55.5 42 52 39 46 37.4 C45.4 36 45.8 35.6 46.4 35 Z" fill="#b87340" opacity=".5"/>
+    <g stroke="#5e3415" stroke-width=".6" fill="none" opacity=".5"><path d="M48 37 C53 40 56.5 45 57.6 48"/><path d="M46.5 39 C51 42 54 47 54 50.4"/><path d="M45 41 C48.5 44 50.5 49 50.6 52"/></g>
+    <path d="M47.5 36 C52 38 55.5 42 57 46" stroke="#fbeed0" stroke-width=".8" fill="none" opacity=".4" stroke-linecap="round"/>
+  </g>
+  <g class="so-wingR">
+    <path class="so-wing" d="M18 33 C11 33 5 37 3 45 C2.4 48 4 49.5 6.6 48 C5.6 50.6 7.6 52 10 50.6 C9.4 53 11.6 54 13.6 52 C15 46 16.4 40 19 36.8 C19.5 35.2 19 33.8 18 33 Z"/>
+    <path d="M17.6 35 C12.5 35.5 8 39 6 46 C8.5 42 12 39 18 37.4 C18.6 36 18.2 35.6 17.6 35 Z" fill="#b87340" opacity=".5"/>
+    <g stroke="#5e3415" stroke-width=".6" fill="none" opacity=".5"><path d="M16 37 C11 40 7.5 45 6.4 48"/><path d="M17.5 39 C13 42 10 47 10 50.4"/><path d="M19 41 C15.5 44 13.5 49 13.4 52"/></g>
+    <path d="M16.5 36 C12 38 8.5 42 7 46" stroke="#fbeed0" stroke-width=".8" fill="none" opacity=".4" stroke-linecap="round"/>
+  </g>
+  <g class="so-crown">
+    <path d="M30.8 9 C30 5.8 30.4 3 32.9 2 C35 1.5 35.8 3.4 34.4 4.7 C33.4 4.2 32.5 4.9 32.1 6.3 C31.8 5.1 31.4 4.6 30.8 9 Z" fill="#b87340"/>
+    <path d="M31.6 8 C31.3 5.6 31.9 3.9 33.7 3.2" fill="none" stroke="#6f3e1c" stroke-width=".5" opacity=".35"/>
+  </g>
+  <g class="so-head">
+   <g class="so-tilt">
+    <path class="so-face" d="M32 13 C21 11 13 18 13 29 C13 40 21 47 32 49 C43 47 51 40 51 29 C51 18 43 11 32 13 Z"/>
+    <path d="M32 13 C24 11.6 17.5 15.5 15 23 C20 18 26 16.5 32 16.5 C38 16.5 44 18 49 23 C46.5 15.5 40 11.6 32 13 Z" fill="#fbeed0" opacity=".5"/>
+    <path d="M32 49 C39 47.5 45 43.5 48.4 37 C44 41 38 43 32 43 C26 43 20 41 15.6 37 C19 43.5 25 47.5 32 49 Z" fill="#d9be8e" opacity=".5"/>
+    <path class="so-rim" d="M32 13 C21 11 13 18 13 29 C13 40 21 47 32 49 C43 47 51 40 51 29 C51 18 43 11 32 13 Z" fill="none" stroke="#8a5226" stroke-width="1.1" opacity=".5"/>
+    <g class="so-tuft">
+      <path class="so-face" d="M14 31 q-5 -1 -7 2 q4 0 7 1.6 Z"/>
+      <path class="so-face" d="M50 31 q5 -1 7 2 q-4 0 -7 1.6 Z"/>
+      <path class="so-face" d="M15 38 q-4 1 -5 3.6 q4 -1.4 6 -1.8 Z"/>
+      <path class="so-face" d="M49 38 q4 1 5 3.6 q-4 -1.4 -6 -1.8 Z"/>
+    </g>
+    <path d="M32 16 C31 24 31 36 32 47" stroke="#cdaf7c" stroke-width="1" fill="none" opacity=".5"/>
+    <path d="M32 16.5 C23 15 16 20.6 16 29 C16 38 23.5 44 32 45.6 C40.5 44 48 38 48 29 C48 20.6 41 15 32 16.5 Z" fill="none" stroke="#b88a52" stroke-width=".7" opacity=".4"/>
+    <path d="M32 19 C25.2 17.9 19.6 22 19.6 29 C19.6 36.2 25.8 41 32 42.4 C38.2 41 44.4 36.2 44.4 29 C44.4 22 38.8 17.9 32 19 Z" fill="none" stroke="#cdaf7c" stroke-width=".55" opacity=".3"/>
+    <path class="so-brow" d="M17.8 20 Q24.3 16.7 30.4 19.2" stroke="#9a6228" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".62"/>
+    <path class="so-brow" d="M46.2 18 Q39.7 14.3 33.6 17.8" stroke="#9a6228" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".66"/>
+    <g class="so-eyes">
+      <ellipse cx="24.3" cy="29.2" rx="7.3" ry="7.1" fill="#3a2812"/><ellipse cx="24.3" cy="29.5" rx="6.2" ry="6" fill="#15100a"/>
+      <ellipse cx="39.7" cy="29.2" rx="7.1" ry="6.9" fill="#3a2812"/><ellipse cx="39.7" cy="29.5" rx="6" ry="5.8" fill="#15100a"/>
+    </g>
+    <g class="so-glint" fill="#fff">
+      <circle cx="23.3" cy="26.9" r="2.5" opacity=".95"/><circle cx="25.6" cy="31.3" r="1.1" opacity=".5"/>
+      <circle cx="38.8" cy="26.9" r="2.4" opacity=".95"/><circle cx="41" cy="31.3" r="1.1" opacity=".5"/>
+    </g>
+    <path class="so-beak" d="M32 32 C29.9 32 28.5 33.2 28.7 35 C28.9 37 31 38.9 32 38.9 C33 38.9 35.1 37 35.3 35 C35.5 33.2 34.1 32 32 32 Z"/>
+    <path d="M32 32.2 C30.7 32.4 30 33.4 30.1 34.7 L33.9 34.7 C34 33.4 33.3 32.4 32 32.2 Z" fill="#fff" opacity=".2"/>
+    <path d="M28.9 39 Q31.4 41.2 33.8 40 Q35 39.4 35.4 38.2" stroke="#7a531f" stroke-width=".9" fill="none" stroke-linecap="round" opacity=".55"/>
+    <ellipse cx="20.5" cy="36" rx="3.3" ry="2.3" fill="#ed9684" opacity=".5"/>
+    <ellipse cx="43.5" cy="36" rx="3.3" ry="2.3" fill="#ed9684" opacity=".5"/>
+    <g class="so-lidgaze">
+     <g class="so-lid left">
+      <circle cx="24.3" cy="29.2" r="7.8" class="so-face"/>
+      <path d="M16.6 29.2 Q24.3 33.9 32 29.2" fill="none" stroke="#7a531f" stroke-width="1.2" stroke-linecap="round"/>
+     </g>
+     <g class="so-lid both">
+      <circle cx="24.3" cy="29.2" r="7.8" class="so-face"/>
+      <circle cx="39.7" cy="29.2" r="7.6" class="so-face"/>
+      <path d="M16.6 29.2 Q24.3 33.9 32 29.2 M32 29.2 Q39.7 33.9 47.3 29.2" fill="none" stroke="#7a531f" stroke-width="1.2" stroke-linecap="round"/>
+     </g>
+    </g>
+   </g>
+  </g>
+</svg>
+  </template>
+  <script>
+    var TPL=document.getElementById('owltpl').innerHTML;
+    document.querySelectorAll('.so-seal').forEach(function(s){s.insertAdjacentHTML('beforeend',TPL);});
+    var stage=document.getElementById('flyStage');
+    function fly(){stage.classList.remove('flying');void stage.offsetWidth;stage.classList.add('flying');setTimeout(function(){stage.classList.remove('flying');},2600);}
+    document.getElementById('flyBtn').addEventListener('click',fly);
+    setTimeout(fly,900);setInterval(fly,4200);
+  </script>
+</body></html>
