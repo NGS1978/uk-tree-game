@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>UK Tree Game — stats</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;max-width:520px;margin:40px auto;padding:0 18px;color:#2e3b22;background:#FBF6E2}
+  h1{font-size:20px;margin:0 0 4px}
+  table{width:100%;border-collapse:collapse;font-size:16px;margin-top:12px}
+  td{padding:9px 4px;border-bottom:1px solid #ddd6bd}
+  td.n{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .muted{color:#7d7a58;font-size:13px;line-height:1.5}
+  button{margin-top:14px;padding:8px 14px;border:1px solid #2e6b3a;background:#2e6b3a;color:#fff;border-radius:8px;font-size:14px;cursor:pointer}
+</style>
+</head>
+<body>
+  <h1>UK Tree Game — global stats</h1>
+  <p class="muted">Anonymous aggregate counts only — no cookies, no personal data, no tracking of individuals.
+  Numbers are simple integer tallies (via Abacus). This owner page is <strong>not linked</strong> from the game.</p>
+  <table id="t"><tbody></tbody></table>
+  <p class="muted" id="ts"></p>
+  <button onclick="load()">Refresh</button>
+  <script>
+    var NS = 'uk-tree-game-7q2x';
+    var rows = [
+      ['open',    'App opens'],
+      ['install', 'Installs (added to home screen)'],
+      ['share',   'Shares'],
+      ['session', 'Games completed'],
+      ['lang-en', 'Language · English'],
+      ['lang-zh', 'Language · 中文']
+    ];
+    function load(){
+      var tb = document.querySelector('#t tbody'); tb.innerHTML = '';
+      Promise.all(rows.map(function(r){
+        return fetch('https://abacus.jasoncameron.dev/get/' + NS + '/' + r[0])
+          .then(function(x){ return x.ok ? x.json() : { value: 0 }; })
+          .then(function(d){ return { label: r[1], n: (d && typeof d.value === 'number') ? d.value : 0 }; })
+          .catch(function(){ return { label: r[1], n: '—' }; });
+      })).then(function(res){
+        res.forEach(function(o){
+          var tr = document.createElement('tr');
+          var a = document.createElement('td'); a.textContent = o.label;
+          var b = document.createElement('td'); b.className = 'n'; b.textContent = o.n;
+          tr.appendChild(a); tr.appendChild(b); tb.appendChild(tr);
+        });
+        document.getElementById('ts').textContent = 'Loaded ' + new Date().toLocaleString();
+      });
+    }
+    load();
+  </script>
+</body>
+</html>
