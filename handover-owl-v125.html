@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>UK Tree Game — owl handover (v125)</title>
+<style>
+  :root{color-scheme:light}
+  body{margin:0;background:#f3efe6;color:#2c3022;font-family:system-ui,-apple-system,sans-serif;line-height:1.55}
+  article{max-width:760px;margin:0 auto;padding:22px 18px 70px;font-size:15px}
+  h1{font-size:22px;margin:18px 0 8px;color:#2e3b22;line-height:1.25}
+  h2{font-size:18px;margin:26px 0 6px;color:#3a4a29;border-bottom:1px solid #ddd6c2;padding-bottom:4px}
+  h3{font-size:15.5px;margin:18px 0 4px;color:#46502f}
+  p{margin:8px 0}
+  ul,ol{margin:8px 0;padding-left:22px}
+  li{margin:5px 0}
+  strong{color:#2c3320}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:#e7e1cf;color:#5a4a22;padding:1px 5px;border-radius:4px;word-break:break-word}
+  a{color:#2e6b3a}
+</style></head><body><article><h1>Handover — owl changes (target: v125), 2026-06-15</h1>
+<p><code>…</code> = <code>C:\Users\NGSNN\OneDrive\Documents\Docs Desktop</code>. Game file = <code>…\tree-game\jans-version\jans-version-124.html</code> (CURRENT, live). Next build = <strong>v125</strong>.</p>
+<h2>Current state (v124, LIVE &amp; verified)</h2>
+<ul>
+<li>Live at <strong>https://ngs1978.github.io/uk-tree-game/</strong> (repo <code>NGS1978/uk-tree-game</code>, local working tree <code>C:\Temp\uk_tree_game</code>, neutral identity <code>NGS1978@users.noreply.github.com</code>).</li>
+<li>Mascot = <strong>naturalistic STORYBOOK TAWNY OWL</strong> (gradient-shaded, all-dark eyes, no ear tufts; chosen from a 4-prototype exploration).</li>
+</ul>
+<p>  - <strong>Seal owl</strong> (share-button "Send me to a friend", 40px blue disc): a <strong>head crop</strong> of the perched storybook owl. <strong>SLEEPY</strong> (half-closed eyes) by default; <strong>hover/touch → ALERT</strong> (open + feathered rim + pale ring + white pin-light) via a <code>.14s</code> opacity swap. Classes: base dark eyeballs + <code>.sleepy-lids</code> (shown) + <code>.alert-extras</code> (hidden); toggled by <code>.share-wrap:hover</code> / <code>.share-wrap.awake</code> (a pointer/touch handler in <code>shareOwlButton</code> adds <code>.awake</code>). ids prefixed <code>oS_</code>.</p>
+<p>  - <strong>Flight owl</strong> (fly-off when you tap share): the full spread-wing storybook owl, <strong>alert eyes</strong>, <strong>wings FLAP</strong> (wings wrapped in <code>.so-wingL</code>/<code>.so-wingR</code> groups, <code>transform-origin 99% 43%</code> / <code>1% 43%</code>, <code>soFlapL</code>/<code>soFlapR</code> keyframes — currently IDENTICAL <code>rotate(-16deg)→22deg→-16deg</code>). ids prefixed <code>oF_</code>.</p>
+<p>  - <strong>GIF</strong> (<code>owl-fly.gif</code>, sent to recipients): the flight owl flaps in carrying a small wax-sealed envelope, descends to the lawn, <strong>drops the envelope onto the grass</strong>, flaps off; text "A friend sent you / UK Tree Game / Let's identify some trees".</p>
+<h2>THE BUILD PIPELINE (all in <code>C:\Temp\jtg_mock\protos\</code>)</h2>
+<ul>
+<li><strong>Source SVGs:</strong> <code>c-perched.svg</code> (storybook perched owl, viewBox <code>0 0 300 360</code>), <code>c-flight.svg</code> (storybook flight owl, viewBox <code>0 0 420 300</code>). (Originally produced by a prototype workflow → <code>protos.json</code>; extracted by <code>extract-c.js</code>.)</li>
+<li><code>build-game-owls.js</code> → <strong><code>seal-owl.txt</code></strong> (head-crop perched, interactive eye-swap, <code>oS_</code> ids, class <code>so-owl</code>, viewBox <code>72 44 156 168</code>, branch removed) + <strong><code>flight-owl.txt</code></strong> (alert flight, <code>oF_</code>).</li>
+<li><code>build-flap-test.js</code> → <strong><code>flight-rigged.txt</code></strong> (flight owl with the two wing blocks wrapped in <code>&lt;g class="so-wingL"&gt;</code> / <code>&lt;g class="so-wingR"&gt;</code>, <code>oF_</code> ids) — this is the one baked into SO_FLIGHT in v124. (Also renders <code>flap-test.html</code> / <code>flap-sym.png</code> — the flap geometry diagnostic.)</li>
+<li><code>bump-v123.js</code> (baked seal+flight into the game), <code>bump-v124.js</code> (rigged flight + flap keyframes). New bumps follow the same pattern: copy <code>jans-version-(N-1).html</code>→<code>jans-version-N.html</code>, do string/regex replaces, bump <code>const JANS_VERSION</code>.</li>
+<li><strong>GIF</strong>: <code>make-gif4.js</code> → <code>gif4.html</code> (560×400 scene: sky+lawn+text+trees, the <code>.owl</code> div on a <code>deliver</code> 4.8s path with <code>.so-wingL/.so-wingR</code> flap, a <code>.held-env</code> carried at the talons, a separate <code>.drop-env</code> that falls to the grass) → <code>render-gif4-frames.js</code> (48 freeze frames into <code>gif4frames/</code>) → <code>assemble-gif4.py</code> (ONE shared palette + <code>dither=NONE</code> + <code>optimize=False</code> + <code>disposal=1</code> — <strong>do NOT change these; they prevent the black-on-WhatsApp + flashing bugs</strong>) → <code>owl-fly.gif</code>.</li>
+<li>Render helper: <code>render-file.js &lt;abs-html&gt; &lt;abs-png&gt; [W] [H]</code> (puppeteer-core → installed Chrome). Use FORWARD-SLASH paths in bash (backslashes get mangled).</li>
+</ul>
+<h2>DEPLOY (every version)</h2>
+<ol>
+<li>Verify: <code>node "…\tree-game\.claude\_verify_jans.js" N</code> (must be 4/4: data:image/ count 130, 32 ids, JS parses, tags balanced).</li>
+<li>In-game render check: <code>node C:\Temp\jtg_mock\owlpost\render-game-check.js</code> (sed its FILE to v N first) — expect <strong>0 console errors</strong>; for the sleepy↔alert seal use <code>render-awake.js</code>.</li>
+<li>Bump <code>…\tree-game\jans-version\sw.js</code> <code>const VERSION = N</code> (MUST equal JANS_VERSION).</li>
+<li>Copy to live tree: <code>jans-version-N.html</code>→<code>C:\Temp\uk_tree_game\index.html</code>, <code>sw.js</code>, <code>owl-fly.gif</code>. Refresh convenience copies: <code>…\tree-game\jans-version.html</code> AND <code>C:\Users\NGSNN\Downloads\jans-version.html</code>.</li>
+<li><code>git -C C:\Temp\uk_tree_game commit</code> (neutral identity) + <code>push</code>. Poll <code>https://ngs1978.github.io/uk-tree-game/</code> for <code>JANS_VERSION = N</code>. The game fetches the GIF at <strong><code>owl-fly.gif?v=JANS_VERSION</code></strong> (version-busted — so bumping the version delivers the new GIF; never the bare URL).</li>
+<li>Update <code>changelog.md</code>, this/the main <code>HANDOVER.md</code>, <code>.claude/jans-deferred-items.md</code> (LOCKS), and the memory <code>project_tree_game_published.md</code>.</li>
+</ol>
+<ul>
+<li>The user is on MOBILE and updates via <strong><code>…/?fresh=1</code></strong> then a full app close/reopen; he confirms version via <strong>Settings → About → vN</strong>. He can't see local files — publish visuals to a URL (he has trouble with sent images) and give the LINK. Each inline SVG on a shared page MUST have UNIQUE gradient ids or it renders blank on his phone.</li>
+</ul>
+<h2>THE 6 REQUESTED CHANGES (for v125)</h2>
+<p><strong>(i) The results-page owl should resemble the GIF (delivering) owl.</strong> The results-page owl = the <strong>seal owl</strong> (a head-crop of <code>c-perched.svg</code>); the GIF owl = the full flying <code>c-flight.svg</code>. They're different poses, and the perched/flight faces may not match exactly. Combined with (ii), the intent seems to be: the share-button owl should read as the SAME owl that delivers the envelope, and should itself HOLD an envelope. <strong>Approach to decide:</strong> likely change the seal owl from a head-only crop to a fuller crop that shows the owl HOLDING a red-wax-seal envelope (talons visible), so it visually matches the GIF's delivering owl — but mind the 40px seal size and the sleepy/alert face interaction (the face must stay readable). May warrant a slightly larger/redesigned share-button presentation. <strong>Consider asking the user to confirm</strong> whether they want the perched owl to hold the envelope, or the flying owl shown statically. Keep the sleepy↔alert eye interaction.</p>
+<p><strong>(ii) The results-page owl should hold a PROPER envelope with a red wax seal.</strong> Add an envelope (white, with a clear RED WAX SEAL) held in the seal owl's talons — see (i). The wax seal should read clearly even at small size (a solid red disc with a subtle impression).</p>
+<p><strong>(iii) Both owls flap "one at a time rather than in symmetry" — make symmetric.</strong> NOTE: v124 already uses IDENTICAL <code>soFlapL</code>/<code>soFlapR</code> keyframes on both wings, and the static test (<code>flap-sym.png</code>) shows same-sign rotation = symmetric POSITIONS (both wings up at −16, both down at +22; opposite signs give one-up-one-down). So v124 *should* be symmetric. <strong>First verify on the LIVE v124</strong>: render consecutive frames of <code>gif4.html</code> (e.g. freeze at t=2.0, 2.06, 2.12…) and check both wings sit at the SAME height each frame; also watch the in-game fly-off. If genuinely asymmetric, suspect an animation-sync issue or that the user is on a CACHED older GIF/version. If it looks symmetric in positions but the same-direction rotation reads as "rowing," the user may actually want a more pronounced <strong>mirror</strong> flap — experiment, but note opposite-sign rotation breaks the symmetric positions. Re-confirm with the user against the live v124.</p>
+<p><strong>(iv) In the GIF, the envelope should be 400% larger with a clear red wax seal.</strong> In <code>make-gif4.js</code>: scale the <code>ENV</code> svg + the <code>.held-env</code> and <code>.drop-env</code> boxes up ~4–5× (currently 30×22 → ~120×88-ish; "400% larger" ≈ 4-5× linear — confirm scale by eye). Re-do the wax seal as a clearly larger, cleaner RED seal (a bold red disc with a subtle star/crest impression and a highlight). Re-tune the held-env position at the talons and the drop trajectory/landing for the bigger envelope so the drop still reads.</p>
+<p><strong>(v) GIF text: "The UK Tree Game"</strong> (add "The"). In <code>make-gif4.js</code> <code>.h1</code>: <code>UK Tree&lt;br&gt;Game</code> → <code>The UK Tree&lt;br&gt;Game</code> (mind the line-break/size so it still fits the 250px text block).</p>
+<p><strong>(vi) "Let's identify some trees" → "Learn to identify trees".</strong> TWO places: (a) the GIF <code>.sub</code> in <code>make-gif4.js</code>; (b) the in-game HOME HEADING (currently "Let's identify some trees" — set in v114; grep the game for <code>Let's identify some trees</code>). Change both to <strong>"Learn to identify trees"</strong>. Also check the OG/Twitter meta + any i18n strings that echo the old line.</p>
+<h2>LOCKS / constraints (do NOT break)</h2>
+<ul>
+<li>Mascot is the naturalistic storybook tawny owl — NOT the old cartoon owl. Sleepy-perched / alert-on-touch / alert-in-flight eye behaviour is locked.</li>
+<li>GIF assembler MUST stay shared-palette + <code>dither=NONE</code> + <code>optimize=False</code> (no black on WhatsApp, no flash). GIF fetched at <code>owl-fly.gif?v=JANS_VERSION</code>.</li>
+<li>Inline SVG ids must stay unique (seal <code>oS_</code>, flight <code>oF_</code>).</li>
+<li>Verifier 130 data:image/ count is frozen (don't add raster). <code>sw.js</code> VERSION == JANS_VERSION.</li>
+<li>The 4 review pages (unlinked) live at <code>/owl-prototypes.html</code>, <code>/owl-eyes.html</code>, <code>/owl-eyes</code>(no), <code>/owl-interactive.html</code> — leave or clean up.</li>
+</ul>
+<h2>Quick orientation for the next session</h2>
+<p>Read this file, the tail of <code>…\tree-game\jans-version\changelog.md</code> (v120–v124), and the memory <code>project_tree_game_published.md</code>. The owl work all lives in <code>C:\Temp\jtg_mock\protos\</code>. Start by reproducing the current GIF (<code>node make-gif4.js &amp;&amp; node render-gif4-frames.js &amp;&amp; python assemble-gif4.py</code>) and the in-game render check, then tackle (v)+(vi) (trivial text), (iv) (envelope size), (iii) (verify symmetry on live), and (i)+(ii) (design — confirm intent with the user).</p></article></body></html>
