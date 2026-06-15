@@ -21,7 +21,7 @@
  * exactly the app (migrated from /jans-tree-game/ in v115). Registered HTTPS-only
  * from the HTML, so the file:// copy and the local http preview never touch it.
  */
-const VERSION = 127;
+const VERSION = 128;
 const CACHE = 'jtg-v' + VERSION;
 
 self.addEventListener('install', (event) => {
@@ -38,12 +38,20 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  // Drop every cache that isn't the current version, then take control.
+  // v128: only drop the OLD caches once the NEW cache is confirmed to hold the
+  // document. Previously activate pruned the prior cache UNCONDITIONALLY, so if
+  // the install precache failed (offline / Pages 5xx at the exact update moment)
+  // the new cache was empty AND the last-good cache was deleted — breaking the
+  // offline launch with no fallback. clients.claim() still runs unconditionally.
   event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(
-        keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))
-      ))
+    caches.open(CACHE)
+      .then((c) => c.match('./'))
+      .then((doc) => {
+        if (!doc) return; // new precache missing — keep the prior good cache
+        return caches.keys().then((keys) => Promise.all(
+          keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))
+        ));
+      })
       .then(() => self.clients.claim())
   );
 });
@@ -54,16 +62,25 @@ self.addEventListener('fetch', (event) => {
   let url;
   try { url = new URL(req.url); } catch (e) { return; }
   if (url.origin !== self.location.origin) return;  // let cross-origin pass through
-  // Cache-first: serve the cached copy with NO network when present (this is
-  // what stops the per-launch 11.6 MB re-download); otherwise fetch, cache a
-  // clean same-origin response, and fall back to the cached document offline.
+  // v128: cache-first ONLY the app document (a navigation to the scope root /
+  // index.html). Previously the handler cached EVERY successful same-origin GET,
+  // which silently pinned stats.html (a live dashboard), owl-share.png, and any
+  // future asset until a SW version bump. Everything other than the document now
+  // goes straight to network — owl-fly.gif has its own ?v= cache-bust, and the
+  // document precache (install) is the one thing we need offline.
+  const isDoc = req.mode === 'navigate' &&
+    (url.pathname.endsWith('/') || url.pathname.endsWith('/index.html'));
+  if (!isDoc) return;
+  // Cache-first on the document: serve the cached copy with NO network when
+  // present (this is what stops the per-launch ~12MB re-download); otherwise
+  // fetch, cache it, and fall back to the cached document offline.
   event.respondWith(
-    caches.match(req).then((cached) => {
+    caches.match('./').then((cached) => {
       if (cached) return cached;
       return fetch(req).then((res) => {
         if (res && res.ok && res.type === 'basic') {
           const copy = res.clone();
-          caches.open(CACHE).then((cache) => cache.put(req, copy));
+          caches.open(CACHE).then((cache) => cache.put('./', copy));
         }
         return res;
       }).catch(() => caches.match('./'));
