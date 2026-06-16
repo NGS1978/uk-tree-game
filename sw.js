@@ -21,7 +21,7 @@
  * exactly the app (migrated from /jans-tree-game/ in v115). Registered HTTPS-only
  * from the HTML, so the file:// copy and the local http preview never touch it.
  */
-const VERSION = 131;
+const VERSION = 132;
 const CACHE = 'jtg-v' + VERSION;
 
 self.addEventListener('install', (event) => {
@@ -62,28 +62,36 @@ self.addEventListener('fetch', (event) => {
   let url;
   try { url = new URL(req.url); } catch (e) { return; }
   if (url.origin !== self.location.origin) return;  // let cross-origin pass through
-  // v128: cache-first ONLY the app document (a navigation to the scope root /
-  // index.html). Previously the handler cached EVERY successful same-origin GET,
-  // which silently pinned stats.html (a live dashboard), owl-share.png, and any
-  // future asset until a SW version bump. Everything other than the document now
-  // goes straight to network — owl-fly.gif has its own ?v= cache-bust, and the
-  // document precache (install) is the one thing we need offline.
+  // Only handle the app document (a navigation to the scope root / index.html).
+  // Everything else (owl-fly.gif with its own ?v= cache-bust, stats.html, the OG
+  // image, future assets) goes straight to network — v128.
   const isDoc = req.mode === 'navigate' &&
     (url.pathname.endsWith('/') || url.pathname.endsWith('/index.html'));
   if (!isDoc) return;
-  // Cache-first on the document: serve the cached copy with NO network when
-  // present (this is what stops the per-launch ~12MB re-download); otherwise
-  // fetch, cache it, and fall back to the cached document offline.
-  event.respondWith(
-    caches.match('./').then((cached) => {
-      if (cached) return cached;
-      return fetch(req).then((res) => {
-        if (res && res.ok && res.type === 'basic') {
-          const copy = res.clone();
-          caches.open(CACHE).then((cache) => cache.put('./', copy));
-        }
-        return res;
-      }).catch(() => caches.match('./'));
-    })
-  );
+  // v132: serve the document from THIS BUILD's cache only (jtg-v<VERSION>). If that
+  // cache has no copy — install's precache failed (flaky 12MB fetch), or this is the
+  // first launch right after a version bump — fetch the LIVE document and cache it.
+  // The old handler used a GLOBAL caches.match('./'), so a failed precache left the
+  // prior build's cache serving a stale doc forever after a bump (the "stuck on an
+  // old version" bug). Tying the lookup to the current CACHE means a version bump
+  // can never keep serving an old build — worst case it re-fetches once, then caches.
+  // A ?fresh / ?reload / ?nocache query forces a network fetch (a manual escape
+  // hatch — the previous SW ignored the query and always returned the cached doc).
+  const bypass = /[?&](fresh|reload|nocache)\b/.test(url.search);
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    if (!bypass) {
+      const hit = await cache.match('./');
+      if (hit) return hit;            // fast path: this build is cached (no re-download)
+    }
+    try {
+      const res = await fetch(new Request('./', { cache: 'reload' }));
+      if (res && res.ok && res.type === 'basic') await cache.put('./', res.clone());
+      return res;
+    } catch (e) {
+      const any = await caches.match('./');   // offline: fall back to any cached copy
+      if (any) return any;
+      throw e;
+    }
+  })());
 });
