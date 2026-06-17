@@ -94,6 +94,9 @@
   var EP = 'https://treegame-stats.ngsnnn.workers.dev/api/stats';
   var charts = {};
   var COL = { open:'#2e6b3a', session:'#3D72A8', dau:'#b8893f' };
+  // species id -> UK common name (the backend stores the stable scientific id; show friendly names here)
+  var TREE_NAMES = {"quercus_robur":"English Oak","quercus_petraea":"Sessile Oak","betula_pendula":"Silver Birch","betula_pubescens":"Downy Birch","fagus_sylvatica":"European Beech","fraxinus_excelsior":"Common Ash","corylus_avellana":"Common Hazel","alnus_glutinosa":"Common Alder","sorbus_aucuparia":"Rowan","crataegus_monogyna":"Hawthorn","prunus_spinosa":"Blackthorn","ilex_aquifolium":"Holly","acer_campestre":"Field Maple","prunus_avium":"Wild Cherry","populus_tremula":"Aspen","tilia_cordata":"Small-leaved Lime","ulmus_glabra":"Wych Elm","malus_sylvestris":"Crab Apple","carpinus_betulus":"Hornbeam","salix_caprea":"Goat Willow","sambucus_nigra":"Common Elder","acer_pseudoplatanus":"Sycamore","castanea_sativa":"Sweet Chestnut","aesculus_hippocastanum":"Horse Chestnut","platanus_x_hispanica":"London Plane","juglans_regia":"Common Walnut","pinus_sylvestris":"Scots Pine","taxus_baccata":"Common Yew","picea_sitchensis":"Sitka Spruce","picea_abies":"Norway Spruce","larix_decidua":"European Larch","pseudotsuga_menziesii":"Douglas Fir"};
+  function treeName(id){ return TREE_NAMES[id] || pretty(id); }
 
   function $(id){ return document.getElementById(id); }
   function setStatus(t){ $('status').textContent = t; }
@@ -145,7 +148,7 @@
     } else { $('cTime').parentNode.innerHTML = '<div class="empty">No activity yet — numbers will appear as people play.</div>'; }
 
     hbar('geo', 'cGeo', (d.countries||[]).slice(0,12).map(function(r){return {label:flag(r.country)+' '+r.country, n:r.n};}), COL.session, 'No locations yet.');
-    hbar('trees','cTrees',(d.hardest_species||[]).slice(0,12).map(function(r){return {label:pretty(r.species), n:r.n};}), '#b5562f', 'No missed trees yet.');
+    hbar('trees','cTrees',(d.hardest_species||[]).slice(0,12).map(function(r){return {label:treeName(r.species), n:r.n};}), '#b5562f', 'No missed trees yet.');
 
     // ---- feature use (themes + modes) ----
     var themes=[], modes=[];
