@@ -21,7 +21,7 @@
  * exactly the app (migrated from /jans-tree-game/ in v115). Registered HTTPS-only
  * from the HTML, so the file:// copy and the local http preview never touch it.
  */
-const VERSION = 139;
+const VERSION = 140;
 const CACHE = 'jtg-v' + VERSION;
 
 self.addEventListener('install', (event) => {
