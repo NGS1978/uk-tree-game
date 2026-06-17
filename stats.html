@@ -164,6 +164,22 @@
       {label:'Latin names ON', n:T['latin-on']||0},
       {label:'Latin names OFF', n:T['latin-off']||0}
     ]);
+    fh += miniTable('Wagner / opera mode', [
+      {label:'Turned on', n:T['wagner-on']||0},
+      {label:'Turned off', n:T['wagner-off']||0}
+    ]);
+    fh += miniTable('Sound & haptics', [
+      {label:'Sound on', n:T['sound-on']||0},
+      {label:'Sound off', n:T['sound-off']||0},
+      {label:'Haptics on', n:T['haptics-on']||0},
+      {label:'Haptics off', n:T['haptics-off']||0}
+    ]);
+    fh += miniTable('Engagement', [
+      {label:'Practice games', n:T['practice']||0},
+      {label:'Library opens', n:T['library-open']||0},
+      {label:'Spotted in the wild', n:T['spotted']||0},
+      {label:'Photos uploaded', n:T['photo-upload']||0}
+    ]);
     $('features').innerHTML = fh || '<div class="empty">No feature data yet.</div>';
 
     // ---- funnel + languages ----
